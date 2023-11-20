@@ -28,6 +28,29 @@ function Get-ESUDocument {
     return $json; 
 }
 
+# Get the Extended Security Update License contents.
+function Get-ESUDocumentSignatureChain {
+    [CmdletBinding()]
+    param
+    (
+        [Parameter(Mandatory=$true)]
+        [ValidateNotNullOrEmpty()]
+        [string] $ESUSignedDocument
+    )
+    $attestedDoc = (Get-Content $ESUSignedDocument | Out-String | ConvertFrom-Json); 
+    $signature = [System.Convert]::FromBase64String($attestedDoc.signature); 
+    $cert = [System.Security.Cryptography.X509Certificates.X509Certificate2]($signature); 
+    $chain = New-Object -TypeName System.Security.Cryptography.X509Certificates.X509Chain; 
+    $chain.Build($cert) | Out-Null; 
+    $certificateChain = ''; 
+    foreach($element in $chain.ChainElements) 
+    { 
+        $certificateChain = $certificateChain + $element.Certificate.Subject + ';'; 
+    }
+ 
+    return $certificateChain; 
+}
+
 # Test the Extended Security Update enrollment.
 function Test-ESUEnrollment {
     [CmdletBinding()]
