@@ -23,6 +23,7 @@ function Install-ESUIntermediateCert
     if( -not $esutempDirectoryExisted){
         Remove-Item -Recurse -Path $esuTempFolder -force -verbose
     }
+    Write-Verbose "Please reboot the machine if machine needs a reboot before installing the updates."
 }
 
 Install-ESUIntermediateCert  -verBose
