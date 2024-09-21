@@ -12,11 +12,11 @@ function Get-MachineDetails {
     ) 
 
     # get token
-    $content=Invoke-WebRequest -Method Get -Uri "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&object_id=$princiPalId&resource=https://management.azure.com/" -Headers @{Metadata="true"}
+    $content=Invoke-WebRequest -UseBasicParsing -Method Get -Uri "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&object_id=$princiPalId&resource=https://management.azure.com/" -Headers @{Metadata="true"}
     $access_token = ($content.Content|ConvertFrom-Json).access_token
 
     # machine details
-    $content=Invoke-WebRequest -Method Get -Uri "http://169.254.169.254/metadata/instance?api-version=2021-02-01" -Headers @{Metadata="true"} 
+    $content=Invoke-WebRequest -UseBasicParsing -Method Get -Uri "http://169.254.169.254/metadata/instance?api-version=2021-02-01" -Headers @{Metadata="true"} 
     $resourceId = ($content.Content|ConvertFrom-Json).compute.resourceId
     $resourceLocation = ($content.Content|ConvertFrom-Json).compute.location
     $resourceId = $resourceId.split("/")
@@ -62,7 +62,21 @@ try {
     [environment]::SetEnvironmentVariable("MSFT_ARC_TEST","true",[EnvironmentVariableTarget]::Machine)
     [environment]::SetEnvironmentVariable("MSFT_ARC_TEST","true",[EnvironmentVariableTarget]::Process)
 
-    $machine_info = Get-MachineDetails -principalId $principalId
+    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor 3072;
+
+    $retryCount = 5
+    $sleepSeconds = 3
+    while($retryCount-- -gt 0) {
+	try {
+	    $machine_info = Get-MachineDetails -principalId $principalId
+ 	    }
+        catch {
+	    Write-Host  -ForegroundColor red $_.Exception;
+            sleep -Seconds $sleepSeconds
+	    continue;
+        }
+	break
+    }
 
     $env:ACCESS_TOKEN = $machine_info.access_token;
     $env:SUBSCRIPTION_ID = $machine_info.subscriptionID;
@@ -74,17 +88,30 @@ try {
     $env:CLOUD = "AzureCloud";
     
 
-    [Net.ServicePointManager]::SecurityProtocol = [Net.ServicePointManager]::SecurityProtocol -bor 3072;
-
     # Download the installation package
-    Invoke-WebRequest -UseBasicParsing -Uri "https://aka.ms/azcmagent-windows" -TimeoutSec 30 -OutFile "$env:TEMP\install_windows_azcmagent.ps1";
+    $retryCount = 5
+    $sleepSeconds = 3
+    while($retryCount-- -gt 0) {
+	try {
+	        Invoke-WebRequest -UseBasicParsing -Uri "https://aka.ms/azcmagent-windows" -TimeoutSec 30 -OutFile "$env:TEMP\install_windows_azcmagent.ps1" ;
+ 	    }
+        catch {
+	    Write-Host  -ForegroundColor red $_.Exception;
+            sleep -Seconds $sleepSeconds
+	    continue;
+        }
+	break
+    }
 
     # Install the hybrid agent
     & "$env:TEMP\install_windows_azcmagent.ps1";
     if ($LASTEXITCODE -ne 0) { exit 1; }
 
     # Run connect command
-   & "$env:ProgramW6432\AzureConnectedMachineAgent\azcmagent.exe" connect  --resource-group "$env:RESOURCE_GROUP" --tenant-id "$env:TENANT_ID" --location "$env:LOCATION" --subscription-id "$env:SUBSCRIPTION_ID" --cloud "$env:CLOUD" --correlation-id "$env:CORRELATION_ID" --access-token "$env:ACCESS_TOKEN";
+    $retryCount = 3
+    while($retryCount-- -gt 0) {
+	   & "$env:ProgramW6432\AzureConnectedMachineAgent\azcmagent.exe" connect  --resource-group "$env:RESOURCE_GROUP" --tenant-id "$env:TENANT_ID" --location "$env:LOCATION" --subscription-id "$env:SUBSCRIPTION_ID" --cloud "$env:CLOUD" --correlation-id "$env:CORRELATION_ID" --access-token "$env:ACCESS_TOKEN";
+    }
 }
 catch {
     $logBody = @{subscriptionId="$env:SUBSCRIPTION_ID";resourceGroup="$env:RESOURCE_GROUP";tenantId="$env:TENANT_ID";location="$env:LOCATION";correlationId="$env:CORRELATION_ID";authType="$env:AUTH_TYPE";operation="onboarding";messageType=$_.FullyQualifiedErrorId;message="$_";};
