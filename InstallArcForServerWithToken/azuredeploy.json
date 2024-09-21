@@ -3,86 +3,121 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
         "location": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "canadacentral"
         },
         "networkInterfaceName": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "win-arctest01453"
         },
         "enableAcceleratedNetworking": {
-            "type": "Bool"
+            "type": "Bool",
+            "defaultValue": true
         },
         "networkSecurityGroupName": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "win-Arctest01-nsg"
         },
         "networkSecurityGroupRules": {
-            "type": "Array"
+            "type": "Array",
+            "defaultValue": []
         },
         "subnetName": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "default"
         },
         "virtualNetworkName": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "win-Arctest01-vnet"
         },
         "addressPrefixes": {
-            "type": "Array"
+            "type": "Array",
+            "defaultValue": [
+                "10.0.0.0/16"
+            ]
         },
         "subnets": {
-            "type": "Array"
+            "type": "Array",
+            "defaultValue": [
+                {
+                    "name": "default",
+                    "properties": {
+                        "addressPrefix": "10.0.0.0/24"
+                    }
+                }
+            ]
         },
         "publicIpAddressName": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "win-Arctest01-ip"
         },
         "publicIpAddressType": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "Static"
         },
         "publicIpAddressSku": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "Standard"
         },
         "pipDeleteOption": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "Detach"
         },
         "virtualMachineName": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "win-Arctest01"
         },
         "virtualMachineComputerName": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "win-Arctest01"
         },
         "virtualMachineRG": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "ArcVMTestrg"
         },
         "osDiskType": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "Premium_LRS"
         },
         "osDiskDeleteOption": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "Delete"
         },
         "virtualMachineSize": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "Standard_D2s_v3"
         },
         "nicDeleteOption": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "Detach"
         },
         "hibernationEnabled": {
-            "type": "Bool"
+            "type": "Bool",
+            "defaultValue": false
         },
         "adminUsername": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "testuser"
         },
         "adminPassword": {
             "type": "SecureString",
             "defaultValue": "[newGuid()]"
         },
         "patchMode": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "AutomaticByOS"
         },
         "enableHotpatching": {
-            "type": "Bool"
+            "type": "Bool",
+            "defaultValue": false
         },
         "identityName": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "win-arctest01453"
         },
         "identityLocation": {
-            "type": "String"
+            "type": "String",
+            "defaultValue": "canadacentral"
         },
         "roleNameGuid": {
             "type": "String",
@@ -99,6 +134,7 @@
                 "Contributor",
                 "Reader"
             ],
+            "defaultValue": "ArcAdmin",
             "metadata": {
                 "description": "Built-in role to assign"
             }
