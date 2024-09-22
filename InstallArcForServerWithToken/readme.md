@@ -1,5 +1,5 @@
 ---
-description: This template creates an Azure VM and install Arc agent for testing purposes.
+description: This template creates an Azure Windows VM and install Arc agent for testing purposes.
 page_type: sample
 products:
 - azure
