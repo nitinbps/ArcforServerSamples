@@ -77,6 +77,9 @@
         "virtualMachineSize": {
             "value": "Standard_D2s_v3"
         },
+        "OSVersion": {
+            "value": "2022-datacenter"
+        },
         "nicDeleteOption": {
             "value": "Detach"
         },
