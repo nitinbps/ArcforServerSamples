@@ -278,10 +278,7 @@
                 "addressSpace": {
                     "addressPrefixes": "[parameters('addressPrefixes')]"
                 },
-                "subnets": "[parameters('subnets')]",
-                "networkSecurityGroup": {
-                    "id": "[variables('nsgId')]"
-                }
+                "subnets": "[parameters('subnets')]"
             }
         },
         {
