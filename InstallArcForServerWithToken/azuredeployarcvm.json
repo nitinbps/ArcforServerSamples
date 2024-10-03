@@ -36,16 +36,9 @@
                 "10.0.0.0/16"
             ]
         },
-        "subnets": {
-            "type": "Array",
-            "defaultValue": [
-                {
-                    "name": "default",
-                    "properties": {
-                        "addressPrefix": "10.0.0.0/24"
-                    }
-                }
-            ]
+        "subnetAddressPrefix": {
+            "type": "String",
+            "defaultValue": "10.0.0.0/24"
         },
         "publicIpAddressName": {
             "type": "String",
@@ -278,7 +271,15 @@
                 "addressSpace": {
                     "addressPrefixes": "[parameters('addressPrefixes')]"
                 },
-                "subnets": "[parameters('subnets')]"
+                "subnets": {
+		    "name": "default",
+                    "properties": {
+                        "addressPrefix": "[parameters('subnetAddressPrefix')]",
+		        "networkSecurityGroup": {
+                    	    "id": "[variables('nsgId')]"
+			}
+                    }
+		}
             }
         },
         {
