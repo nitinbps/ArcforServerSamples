@@ -328,7 +328,7 @@
                         "deleteOption": "[parameters('osDiskDeleteOption')]"
                     },
                     "imageReference": {
-			"sharedGalleryImageId": "/SharedGalleries/WindowsServer.1P/Images/2025-datacenter-azure-edition"
+			"sharedGalleryImageId": "[parameters('OSVersion')]"
                     }
                 },
                 "networkProfile": {
