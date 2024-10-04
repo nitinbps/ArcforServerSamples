@@ -272,18 +272,18 @@
                     "addressPrefixes": "[parameters('addressPrefixes')]"
                 },
                 "subnets": [
-			{
-			    "name": "default",
-	                    "properties": {
-	                        "addressPrefix": "[parameters('subnetAddressPrefix')]",
-			        "networkSecurityGroup": {
-	                    	    "id": "[variables('nsgId')]"
-				}
-	                    }
-			}
-		]
+					{
+						"name": "default",
+						"properties": {
+							"addressPrefix": "[parameters('subnetAddressPrefix')]",
+							"networkSecurityGroup": {
+								"id": "[variables('nsgId')]"
+							}
+						}
+					}
+				]
             },
-	    "dependsOn": [
+			"dependsOn": [
                 "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]"
             ],
         },
