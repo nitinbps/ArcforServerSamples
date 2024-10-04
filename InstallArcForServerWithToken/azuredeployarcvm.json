@@ -285,7 +285,7 @@
             },
 			"dependsOn": [
                 "[concat('Microsoft.Network/networkSecurityGroups/', parameters('networkSecurityGroupName'))]"
-            ],
+            ]
         },
         {
             "type": "Microsoft.Network/publicIpAddresses",
