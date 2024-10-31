@@ -1,4 +1,5 @@
 param(
+      [string]$cloudEnv = "AzureCloud",
       [Parameter(Mandatory)] # Don't add Mandatory if it's false. Cause this the default
       [string]$principalId 
      ) 
@@ -12,7 +13,7 @@ function Get-MachineDetails {
     ) 
 
     # get token
-    $content=Invoke-WebRequest -UseBasicParsing -Method Get -Uri "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&object_id=$princiPalId&resource=https://management.azure.com/" -Headers @{Metadata="true"}
+    $content=Invoke-WebRequest -UseBasicParsing -Method Get -Uri "http://169.254.169.254/metadata/identity/oauth2/token?api-version=2018-02-01&object_id=$princiPalId&resource=$env:AZUREURI" -Headers @{Metadata="true"}
     $access_token = ($content.Content|ConvertFrom-Json).access_token
 
     # machine details
@@ -66,6 +67,27 @@ try {
 
     $retryCount = 5
     $sleepSeconds = 3
+
+    if ($cloudEnv -eq "AzureCloud") {
+
+        $env:TENANT_ID = "72f988bf-86f1-41af-91ab-2d7cd011db47";
+        $env:AUTH_TYPE = "principal";
+        $env:CORRELATION_ID = "c0a82881-305f-4243-b9e3-96861a595b7e";
+        $env:CLOUD = "AzureCloud";
+        $env:AZUREURI = "https://management.azure.com/"
+        $env:HCRPURI = "https://aka.ms/azcmagent-windows"
+    } elseif ($cloudEnv -eq "AzureUSGovernment") {
+        $env:TENANT_ID = "63296244-ce2c-46d8-bc36-3e558792fbee"
+        $env:AUTH_TYPE = "token"
+        $env:CORRELATION_ID = "6893e6e5-fc02-4942-b533-73abf43f07ac"
+        $env:CLOUD = "AzureUSGovernment"
+        $env:AZUREURI = "https://management.usgovcloudapi.net/"
+        $env:HCRPURI = "https://gbl.his.arc.azure.us/azcmagent-windows"
+    } else {
+        Write-Error "Unsupported cloudEnv: $cloudEnv"
+		exit 1
+    }
+
     while($retryCount-- -gt 0) {
 	try {
 	    $machine_info = Get-MachineDetails -principalId $principalId
@@ -77,15 +99,10 @@ try {
         }
 	break
     }
-
     $env:ACCESS_TOKEN = $machine_info.access_token;
     $env:SUBSCRIPTION_ID = $machine_info.subscriptionID;
     $env:RESOURCE_GROUP = $machine_info.resourceGroupName;
-    $env:TENANT_ID = "72f988bf-86f1-41af-91ab-2d7cd011db47";
     $env:LOCATION = $machine_info.resourceLocation;
-    $env:AUTH_TYPE = "principal";
-    $env:CORRELATION_ID = "c0a82881-305f-4243-b9e3-96861a595b7e";
-    $env:CLOUD = "AzureCloud";
     
 
     # Download the installation package
@@ -93,7 +110,7 @@ try {
     $sleepSeconds = 3
     while($retryCount-- -gt 0) {
 	try {
-	        Invoke-WebRequest -UseBasicParsing -Uri "https://aka.ms/azcmagent-windows" -TimeoutSec 30 -OutFile "$env:TEMP\install_windows_azcmagent.ps1" ;
+	        Invoke-WebRequest -UseBasicParsing -Uri "$env:HCRPURI" -TimeoutSec 30 -OutFile "$env:TEMP\install_windows_azcmagent.ps1" ;
  	    }
         catch {
 	    Write-Host  -ForegroundColor red $_.Exception;
