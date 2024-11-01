@@ -67,7 +67,7 @@ function Test-ESUEnrollment {
     }
 
     $esuDocument = Get-ESUDocument -ESUSignedDocument $esuSignedDocument;
-    if((Get-Date $esuDocument.timeStamp.expiresOn) -lt (Get-Date))
+    if(([Datetime]$esuDocument.timeStamp.expiresOn) -lt (Get-Date))
     {
         Write-Verbose 'Extended Security Update License is expired.';
         return $false;
