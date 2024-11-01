@@ -169,6 +169,17 @@
             "metadata": {
                 "description": "Built-in role to assign"
             }
+        },
+        "cloudEnv": {
+            "defaultValue": "AzureCloud",
+            "allowedValues": [
+                "AzureCloud",
+                "AzureUSGovernment"
+            ],
+            "type": "String",
+            "metadata": {
+                "description": "Set to AzureCloud if running in Public cloud or to AzureUSGovernment if running in Fairfax"
+            }
         }
     },
     "variables": {

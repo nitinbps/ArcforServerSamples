@@ -94,6 +94,9 @@
         },
         "enableHotpatching": {
             "value": false
+        },
+        "cloudEnv": {
+            "value": "AzureCloud"
         }
     }
 }
