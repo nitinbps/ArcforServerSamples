@@ -74,7 +74,7 @@
         },
         "OSVersion": {
         "type": "string",
-        "defaultValue": "2022-datacenter-azure-edition",
+        "defaultValue": "2022-datacenter",
         "allowedValues": [
             "2016-datacenter-gensecond",
             "2016-datacenter-server-core-g2",
