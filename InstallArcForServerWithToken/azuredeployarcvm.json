@@ -103,7 +103,8 @@
             "2012-R2-Datacenter",
             "2016-Datacenter",
             "2019-Datacenter",
-            "2022-datacenter"
+            "2022-datacenter",
+	    "2025-datacenter"
 
         ],
         "metadata": {
