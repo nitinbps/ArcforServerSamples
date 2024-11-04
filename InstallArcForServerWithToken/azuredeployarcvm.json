@@ -166,7 +166,7 @@
                 "Contributor",
                 "Reader"
             ],
-            "defaultValue": "ArcAdmin",
+            "defaultValue": "Contributor",
             "metadata": {
                 "description": "Built-in role to assign"
             }
