@@ -162,7 +162,7 @@
                 "Contributor",
                 "Reader"
             ],
-            "defaultValue": "Contributor",
+            "defaultValue": "Owner",
             "metadata": {
                 "description": "Built-in role to assign"
             }
