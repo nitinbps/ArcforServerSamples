@@ -211,14 +211,13 @@
               "azPowerShellVersion": "3.0",
               "scriptContent": "start-sleep -Seconds 30",
               "cleanupPreference": "Always",
-              "retentionInterval": "PT1H"
+              "retentionInterval": "PT30S"
             }
           },
         {
           "type": "Microsoft.Authorization/roleAssignments",
           "apiVersion": "2018-09-01-preview",
           "name": "[parameters('roleNameGuid')]",
-	  "scope": "[subscription().id]",
           "properties": {
               "roleDefinitionId": "[variables(parameters('builtInRoleType'))]",
               "principalId": "[reference(resourceId(resourceGroup().name, 'Microsoft.ManagedIdentity/userAssignedIdentities', parameters('identityName')), '2023-01-31', 'Full').Properties.principalId]"
