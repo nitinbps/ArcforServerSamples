@@ -21,9 +21,7 @@ function Get-TenantId {
     while ($tokenheader.Length % 4) { Write-Verbose "Invalid length for a Base-64 char array or string, adding ="; $tokenheader += "=" }
    
     #Convert from Base64 encoded string to PSObject all at once
-    Write-Verbose "Decoded header:"
-    [System.Text.Encoding]::ASCII.GetString([system.convert]::FromBase64String($tokenheader)) | ConvertFrom-Json | fl | Out-Default
- 
+    #[System.Text.Encoding]::ASCII.GetString([system.convert]::FromBase64String($tokenheader)) | ConvertFrom-Json  
     #Payload
     $tokenPayload = $token.Split(".")[1].Replace('-', '+').Replace('_', '/')
     #Fix padding as needed, keep adding "=" until string length modulus 4 reaches 0
